@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo """
-RUN
-export USE_CCACHE=1
-export CCACHE_DIR=/var/ccache
+source $(dirname "$(readlink -f "$0")")/docker-manual-common.sh
+
+DOCKER_IMAGE="z3ntu/android-n-build-env"
+BUILD_COMMANDS="""
 export USER=\$(whoami)
 export WITH_SU=true
 
@@ -15,10 +15,9 @@ mka bacon
 mka bootimage
 """
 
-DOCKER_IMAGE="z3ntu/android-n-build-env"
-MOUNTS="-v /mnt/1tb/lineageos-16.0/:/var/android -v /mnt/500gb/ccache/:/var/ccache/"
+print_ccache
+print_build_commands
 
-echo "Pulling down docker image."
-sudo docker pull $DOCKER_IMAGE
+docker_pull
 
-sudo docker run --rm --net=host $MOUNTS -i -t $DOCKER_IMAGE /bin/bash
+docker_run
