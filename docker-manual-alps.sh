@@ -1,10 +1,9 @@
 #!/bin/bash
 
-echo """
-RUN
-export USE_CCACHE=1
-export CCACHE_DIR=/var/ccache
+source $(dirname "$(readlink -f "$0")")/docker-manual-common.sh
 
+DOCKER_IMAGE="android44"
+BUILD_COMMANDS="""
 rm -rf out/
 ./mk -o=TARGET_BUILD_VARIANT=userdebug ahong89_wet_jb2 n k
 ./mk -o=TARGET_BUILD_VARIANT=userdebug ahong89_wet_jb2 otapackage
@@ -12,10 +11,7 @@ rm -rf out/
 ./mk -o=TARGET_BUILD_VARIANT=userdebug ahong89_wet_jb2 bootimage
 """
 
-DOCKER_IMAGE="android44"
-MOUNTS="-v /mnt/1tb/mtk-aosp/:/var/android -v /mnt/500gb/ccache/:/var/ccache/"
+print_ccache
+print_build_commands
 
-#echo "Pulling down docker image."
-#sudo docker pull $DOCKER_IMAGE
-
-sudo docker run --rm --net=host $MOUNTS -i -t $DOCKER_IMAGE /bin/bash
+docker_run

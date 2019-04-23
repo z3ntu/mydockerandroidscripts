@@ -9,7 +9,7 @@ export WITH_SU=true
 
 source build/envsetup.sh
 
-breakfast FP2 eng
+breakfast FP2 userdebug
 mka bacon
 # or
 mka bootimage

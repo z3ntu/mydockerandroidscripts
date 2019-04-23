@@ -1,19 +1,18 @@
 #!/bin/bash
 
-echo """
-RUN
-export USE_CCACHE=1
-export CCACHE_DIR=/var/ccache
+source $(dirname "$(readlink -f "$0")")/docker-manual-common.sh
 
+DOCKER_IMAGE="z3ntu/android-m-build-env"
+BUILD_COMMANDS="""
 source build/envsetup.sh
+
 lunch omni_FP2-eng
 mka recoveryimage
 """
 
-DOCKER_IMAGE="z3ntu/android-m-build-env"
-MOUNTS="-v /mnt/1tb/omni-6/:/var/android -v /mnt/500gb/ccache/:/var/ccache/"
+print_ccache
+print_build_commands
 
-echo "Pulling down docker image."
-sudo docker pull $DOCKER_IMAGE
+docker_pull
 
-sudo docker run --rm --net=host $MOUNTS -i -t $DOCKER_IMAGE /bin/bash
+docker_run
